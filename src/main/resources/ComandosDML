@@ -46,3 +46,5 @@
      APPLY BATCH;
      ```
      - **Explicación**: Inserta un nuevo registro y actualiza la edad de otro registro en un solo lote de operaciones.
+
+cqlsh> SELECT COUNT(*) FROM ks_results.football_results ;
