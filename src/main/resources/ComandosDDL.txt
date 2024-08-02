@@ -1,0 +1,52 @@
+Claro, aquí tienes una explicación sencilla de cada comando de CQL (Cassandra Query Language) para consultas en Cassandra:
+
+### Comandos DDL (Data Definition Language)
+
+1. **CREATE KEYSPACE**:
+   - **Propósito**: Crear un espacio de trabajo en Cassandra donde puedes almacenar tus tablas. Un keyspace es similar a una base de datos en otros sistemas.
+   - **Ejemplo**:
+     ```sql
+     CREATE KEYSPACE mi_keyspace
+     WITH REPLICATION = {
+       'class': 'SimpleStrategy',
+       'replication_factor': 3
+     };
+     ```
+     - **Explicación**: Crea un keyspace llamado `mi_keyspace` con una estrategia de replicación simple y un factor de replicación de 3.
+
+2. **CREATE TABLE**:
+   - **Propósito**: Crear una nueva tabla dentro de un keyspace para almacenar datos.
+   - **Ejemplo**:
+     ```sql
+     CREATE TABLE mi_keyspace.mi_tabla (
+       id UUID PRIMARY KEY,
+       nombre TEXT,
+       edad INT
+     );
+     ```
+     - **Explicación**: Crea una tabla llamada `mi_tabla` con columnas para `id`, `nombre` y `edad`.
+
+3. **ALTER TABLE**:
+   - **Propósito**: Modificar la estructura de una tabla existente, como agregar una nueva columna.
+   - **Ejemplo**:
+     ```sql
+     ALTER TABLE mi_keyspace.mi_tabla
+     ADD direccion TEXT;
+     ```
+     - **Explicación**: Agrega una nueva columna llamada `direccion` a la tabla `mi_tabla`.
+
+4. **DROP TABLE**:
+   - **Propósito**: Eliminar una tabla existente y todos los datos que contiene.
+   - **Ejemplo**:
+     ```sql
+     DROP TABLE mi_keyspace.mi_tabla;
+     ```
+     - **Explicación**: Elimina la tabla `mi_tabla` del keyspace `mi_keyspace`.
+
+5. **DROP KEYSPACE**:
+   - **Propósito**: Eliminar un keyspace completo, incluidas todas las tablas y datos dentro de él.
+   - **Ejemplo**:
+     ```sql
+     DROP KEYSPACE mi_keyspace;
+     ```
+     - **Explicación**: Elimina el keyspace `mi_keyspace` y todo lo que contiene.

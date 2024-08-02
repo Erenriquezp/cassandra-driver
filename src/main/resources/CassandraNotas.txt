@@ -1,0 +1,68 @@
+El Modelo de Tabla en Cassandra
+
+El concepto de tabla en Cassandra difiere del de las bases de datos relacionales.
+Aquí, una tabla se ve como un conjunto de particiones, y cada partición contiene filas con una estructura similar.
+La clave para entender esto es el concepto de claves.
+
+Clave de Partición: Cada partición tiene una clave de partición única que la identifica.
+Clave de Agrupamiento (Clustering Key): Opcionalmente, cada fila dentro de una partición puede tener una clave
+de agrupamiento única. Clave Primaria: La combinación de la clave de partición y la clave de agrupamiento
+(si existe) forma la clave primaria, que identifica de forma única cada fila en la tabla.
+
+Tipos de Tablas
+
+Particiones de una sola fila: Si una tabla no tiene clave de agrupamiento, solo puede tener particiones de
+una sola fila, ya que cada fila se identifica únicamente por su clave de partición.
+Particiones de múltiples filas: Si una tabla tiene una clave de agrupamiento, puede tener particiones
+con varias filas, cada una con una clave de agrupamiento diferente. Las filas dentro de una partición
+se ordenan según los valores de la clave de agrupamiento.
+
+Esquema de Tabla
+
+El esquema de una tabla define:
+
+Columnas: Cada columna tiene un tipo de dato (primitivo o complejo) y puede ser estática
+(compartida por todas las filas de una partición) o un contador (para mantener un contador distribuido).
+Clave Primaria: La secuencia de columnas que forman la clave primaria, comenzando con las columnas de
+la clave de partición y seguidas opcionalmente por las de la clave de agrupamiento.
+
+Pasos
+
+1. Conceptual Data Model: Es el primer paso y consiste en crear un modelo abstracto de los datos que se van a
+almacenar. Este modelo no se preocupa por los detalles de implementación en una base de datos específica,
+sino que se centra en las entidades, sus atributos y las relaciones entre ellas. Se pueden utilizar diagramas
+entidad-relación (ER) u otras técnicas de modelado para representar este modelo conceptual.
+
+2. Application Workflow: En paralelo al modelo conceptual, se define el flujo de trabajo de la aplicación.
+Esto implica identificar las operaciones (lecturas, escrituras, actualizaciones) que la aplicación realizará
+sobre los datos, así como las consultas que necesitará ejecutar. Es fundamental entender cómo interactuará
+la aplicación con la base de datos para poder diseñar un modelo de datos eficiente.
+
+3. Mapping Conceptual-to-Logical: Este paso crucial consiste en traducir el modelo conceptual de datos a
+un modelo lógico específico para Cassandra. Aquí es donde se aplican las reglas y patrones de mapeo que
+mencionamos anteriormente, teniendo en cuenta las características y limitaciones de Cassandra.
+El resultado es un modelo lógico que define las tablas, las claves primarias (incluyendo claves de
+partición y agrupamiento) y las columnas que se utilizarán en la base de datos.
+
+DMP1 (Know Your Data)
+DMP2 (Know Your Queries)
+DMP3 (Data Nesting)
+DMP4 (Data Duplication)
+
+MR1 (Entities and Relationships)
+MR2 (Equality Search Attributes)
+MR3 (Inequality Search Attributes)
+MR4 (Ordering Attributes)
+MR5 (Key Attributes)
+
+4. Logical Data Model: El modelo lógico resultante es una representación detallada de cómo se estructurarán
+los datos en Cassandra. Este modelo ya tiene en cuenta las particularidades de Cassandra, como la ausencia
+de joins y la importancia de las claves primarias para el rendimiento de las consultas.
+
+5. Physical Optimization: En esta etapa, se optimiza el modelo lógico teniendo en cuenta factores físicos
+como el tamaño de las particiones, la distribución de datos en el clúster y la replicación. El objetivo
+es garantizar un rendimiento óptimo y una distribución equilibrada de los datos en los nodos del clúster.
+
+6. Physical Data Model: El modelo físico final es el resultado de la optimización y representa el diseño
+definitivo de la base de datos en Cassandra. Este modelo está listo para ser implementado y utilizado por
+la aplicación.

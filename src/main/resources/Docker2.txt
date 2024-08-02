@@ -1,0 +1,58 @@
+Para agregar otro nodo al clúster, cambiar el tipo de snitch y
+ubicar cada nodo en un rack y centro de datos distintos
+
+docker volume create --name=cassandra_seed_data
+docker volume create --name=cassandra_node1_data
+docker volume create --name=cassandra_node2_data
+
+docker run -d --name cass_seed -v cassandra_seed_data:/etc/cassandra/ -p 9042:9042 -p 7000:7000 -p 7001:7001 -p 7199:7199
+
+docker run -d --name cass_1 -v cassandra_node1_data:/etc/cassandra/ -e CASSANDRA_SEEDS="$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' cass_seed)" cassandra
+docker run -d --name cass_2 -v cassandra_node2_data:/etc/cassandra/ -e CASSANDRA_SEEDS="$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' cass_seed)" cassandra
+
+docker cp cass_seed:/etc/cassandra //wsl.localhost/docker-desktop-data/data/docker/volumes/cassandra_seed_data/_data
+docker cp cass_1:/etc/cassandra //wsl.localhost/docker-desktop-data/data/docker/volumes/cassandra_node1_data/_data
+docker cp cass_2:/etc/cassandra //wsl.localhost/docker-desktop-data/data/docker/volumes/cassandra_node2_data/_data
+
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' cass_seed
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' cass_1
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' cass_2
+
+nano //wsl.localhost/docker-desktop-data/data/docker/volumes/cassandra_seed_data/_data/cassandra-rack.properties
+dc=DC1
+rack=rack1
+
+nano //wsl.localhost/docker-desktop-data/data/docker/volumes/cassandra_node1_data/_data/cassandra-rack.properties
+dc=DC2
+rack=rack2
+
+nano //wsl.localhost/docker-desktop-data/data/docker/volumes/cassandra_node2_data/_data/cassandra-rack.properties
+dc=DC3
+rack=rack3
+
+nano //wsl.localhost/docker-desktop-data/data/docker/volumes/cassandra_seed_data/_data/cassandra.yaml
+cluster_name: 'Cassandra Cluster'
+endpoint_snitch: PropertyFileSnitch
+
+nano //wsl.localhost/docker-desktop-data/data/docker/volumes/cassandra_node1_data/_data/cassandra.yaml
+cluster_name: 'Cassandra Cluster'
+endpoint_snitch: PropertyFileSnitch
+
+nano //wsl.localhost/docker-desktop-data/data/docker/volumes/cassandra_node2_data/_data/cassandra.yaml
+cluster_name: 'Cassandra Cluster'
+endpoint_snitch: PropertyFileSnitch
+
+# Comentar la última línea
+JVM_OPTS="$JVM_OPTS -Dcassandra.ignore_dc=true -Dcassandra.ignore_rack=true"
+
+docker restart cass_seed
+docker restart cass_1
+docker restart cass_2
+
+docker exec -it cass_seed nodetool status
+docker exec -it cass_seed nodetool getseeds
+docker exec -it cass_seed nodetool cleanup
+docker exec -it cass_seed nodetool toppartitions keyspace table
+docker exec -it cass_seed nodetool getsstables keyspace table
+docker exec -it cass_seed nodetool getendpoints keyspace table key
+docker exec -it cass_seed nodetool ring

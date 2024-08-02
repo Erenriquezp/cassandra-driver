@@ -1,0 +1,35 @@
+## Comandos de Control
+
+1. **USE**:
+   - **Propósito**: Establecer el keyspace activo para las siguientes operaciones.
+   - **Ejemplo**:
+     ```sql
+     USE mi_keyspace;
+     ```
+     - **Explicación**: Cambia el keyspace activo a `mi_keyspace` para que no tengas que especificarlo en cada comando.
+
+2. **DESCRIBE KEYSPACE**:
+   - **Propósito**: Mostrar la estructura y configuración de un keyspace.
+   - **Ejemplo**:
+     ```sql
+     DESCRIBE KEYSPACE mi_keyspace;
+     ```
+     - **Explicación**: Muestra la información sobre el keyspace `mi_keyspace`.
+
+3. **DESCRIBE TABLE**:
+   - **Propósito**: Mostrar la estructura de una tabla.
+   - **Ejemplo**:
+     ```sql
+     DESCRIBE TABLE mi_keyspace.mi_tabla;
+     ```
+     - **Explicación**: Muestra la información sobre la tabla `mi_tabla`.
+
+4. **TRUNCATE**:
+   - **Propósito**: Eliminar todos los datos de una tabla sin eliminar la tabla en sí.
+   - **Ejemplo**:
+     ```sql
+     TRUNCATE mi_keyspace.mi_tabla;
+     ```
+     - **Explicación**: Borra todos los registros de `mi_tabla`, pero mantiene la estructura de la tabla.
+
+Estos comandos te permiten gestionar y manipular datos en una base de datos Cassandra de manera efectiva.

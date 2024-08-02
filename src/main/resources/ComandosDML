@@ -1,0 +1,48 @@
+### Comandos DML (Data Manipulation Language)
+
+1. **INSERT**:
+   - **Propósito**: Agregar nuevos datos a una tabla.
+   - **Ejemplo**:
+     ```sql
+     INSERT INTO mi_keyspace.mi_tabla (id, nombre, edad)
+     VALUES (uuid(), 'Juan', 30);
+     ```
+     - **Explicación**: Inserta un nuevo registro en `mi_tabla` con un `id` generado automáticamente, nombre 'Juan', y edad 30.
+
+2. **UPDATE**:
+   - **Propósito**: Modificar datos existentes en una tabla.
+   - **Ejemplo**:
+     ```sql
+     UPDATE mi_keyspace.mi_tabla
+     SET nombre = 'Pedro', edad = 31
+     WHERE id = uuid();
+     ```
+     - **Explicación**: Actualiza el registro en `mi_tabla` con el `id` especificado, cambiando el nombre a 'Pedro' y la edad a 31.
+
+3. **DELETE**:
+   - **Propósito**: Eliminar datos de una tabla.
+   - **Ejemplo**:
+     ```sql
+     DELETE FROM mi_keyspace.mi_tabla
+     WHERE id = uuid();
+     ```
+     - **Explicación**: Elimina el registro en `mi_tabla` con el `id` especificado.
+
+4. **SELECT**:
+   - **Propósito**: Consultar datos de una tabla.
+   - **Ejemplo**:
+     ```sql
+     SELECT * FROM mi_keyspace.mi_tabla;
+     ```
+     - **Explicación**: Selecciona y muestra todos los registros de `mi_tabla`.
+
+5. **BATCH**:
+   - **Propósito**: Ejecutar múltiples operaciones DML de manera atómica.
+   - **Ejemplo**:
+     ```sql
+     BEGIN BATCH
+     INSERT INTO mi_keyspace.mi_tabla (id, nombre, edad) VALUES (uuid(), 'Ana', 25);
+     UPDATE mi_keyspace.mi_tabla SET edad = 26 WHERE id = uuid();
+     APPLY BATCH;
+     ```
+     - **Explicación**: Inserta un nuevo registro y actualiza la edad de otro registro en un solo lote de operaciones.

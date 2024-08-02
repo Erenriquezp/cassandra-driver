@@ -1,0 +1,35 @@
+Este conjunto de comandos configura y gestiona un clúster de Cassandra con Docker,
+incluyendo la persistencia de datos, configuración de red, y ajustes de propiedades del clúster.
+
+docker volume create --name=cassandra_seed_data
+docker volume create --name=cassandra_node1_data
+
+docker run -d --name cass_seed -v cassandra_seed_data:/etc/cassandra/ -p 9042:9042 -p 7000:7000 -p 7001:7001 -p 7199:7199 cassandra
+docker run -d --name cass_1 -v cassandra_node1_data:/etc/cassandra/ -e CASSANDRA_SEEDS="$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' cass_seed)" cassandra
+
+docker cp cass_seed:/etc/cassandra //wsl.localhost/docker-desktop-data/data/docker/volumes/cassandra_seed_data/_data
+docker cp cass_1:/etc/cassandra //wsl.localhost/docker-desktop-data/data/docker/volumes/cassandra_node1_data/_data
+
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' cass_seed
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' cass_1
+
+nano cassandra-rack.properties
+dc=QUITO
+rack=rack1
+
+nano cassandra.yaml
+cluster_name: 'Cassandra Cluster'
+endpoint_snitch: GossipingPropertyFileSnitch
+seed_provider:
+
+nano cassandra.env.sh
+#
+JVM_OPTS="$JVM_OPTS -Dcassandra.ignore_dc=true -Dcassandra.ignore_rack=true"
+
+nodetool status
+nodetool getseeds
+nodetool cleanup --- Ayuda a liberar espacio y mantener la eficiencia del nodo.
+nodetool toppartitions keyspace table
+nodetool getsstables keyspace table
+nodetool getendpoints keyspace table key -- Muestra dónde está replicada una clave.
+nodetool ring -- Muestra información sobre el anillo de nodos en el clúster.
